@@ -49,7 +49,13 @@ That picture is the **shape** of the output, not a scored run. Your table is the
 
 GitHub’s file viewer will not play this mp4. Watch it here:
 
-**[Play the 51s film](https://youngmoneyinvestments.github.io/context-bench/watch.html)** · [16:9 mp4](https://youngmoneyinvestments.github.io/context-bench/assets/context-bench.mp4) · [release](https://github.com/YoungMoneyInvestments/context-bench/releases/tag/film)
+<p align="center">
+  <a href="https://youngmoneyinvestments.github.io/keep-or-cut/watch.html">
+    <img src="docs/assets/film-poster.jpg" alt="Play the 51s film" width="100%" />
+  </a>
+</p>
+
+**[Play the 51s film](https://youngmoneyinvestments.github.io/keep-or-cut/watch.html)** · [16:9 mp4](https://youngmoneyinvestments.github.io/keep-or-cut/assets/keep-or-cut.mp4)
 
 ## More commands
 

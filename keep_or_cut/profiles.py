@@ -1,7 +1,6 @@
 """Profile matrix: each Model crossed with bare plus one or more Context Bundles."""
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 from keep_or_cut.models import Profile

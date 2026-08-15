@@ -58,7 +58,7 @@ def _argv(cases_dir: Path, bundle: Path, out_dir: Path) -> list[str]:
     ]
 
 
-def _successful_runs(cases, profiles):
+def _successful_runs(cases, profiles, wrap="fair", **_kwargs):
     return [_run(case.id, profile.id) for case in cases for profile in profiles]
 
 

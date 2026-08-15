@@ -42,7 +42,19 @@ def test_bare_notes_are_empty_in_every_mode():
 def test_resolve_models_aliases():
     assert resolve_models("opus") == [("anthropic", "claude-opus-5")]
     assert resolve_models("grok") == [("grok", "grok-4.6")]
+    assert resolve_models("cursor") == [("cursor", "auto")]
     assert resolve_models("xai:grok-4") == [("xai", "grok-4")]
+
+
+def test_resolve_models_unknown_lists_aliases():
+    try:
+        resolve_models("not-a-model")
+        raise AssertionError("expected ValueError")
+    except ValueError as err:
+        msg = str(err)
+        assert "unknown model 'not-a-model'" in msg
+        for alias in ("opus", "cursor", "grok", "codex", "gemini"):
+            assert alias in msg
 
 
 def test_label_for_context_dir_uses_basename():
@@ -121,6 +133,7 @@ if __name__ == "__main__":
     test_system_wrap_is_notes_as_system()
     test_bare_notes_are_empty_in_every_mode()
     test_resolve_models_aliases()
+    test_resolve_models_unknown_lists_aliases()
     test_label_for_context_dir_uses_basename()
     test_default_profiles_include_bare_and_named_bundle()
     test_bundle_skill_files_finds_skill_md()

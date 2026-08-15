@@ -87,13 +87,15 @@ def main() -> None:
     p.add_argument(
         "--models",
         default="opus,sonnet,haiku",
-        help="Comma list: opus,sonnet,haiku or provider:model-id",
+        help="Comma list of aliases (opus,sonnet,haiku,grok,codex,cursor,gemini) "
+        "or provider:model-id",
     )
     p.add_argument(
         "--provider",
         default="auto",
-        help="auto=subscription CLIs (claude/codex/grok). Never switches to billed API "
-        "because a key is in the environment. Use --provider anthropic/openai/xai for APIs.",
+        help="auto=subscription CLIs (claude/codex/grok/cursor/gemini). Never switches "
+        "to billed API because a key is in the environment. Use "
+        "--provider anthropic/openai/xai for APIs.",
     )
     p.add_argument(
         "--split",

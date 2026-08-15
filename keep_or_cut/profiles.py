@@ -41,8 +41,9 @@ def resolve_models(spec: str) -> list[tuple[str, str]]:
             provider, model = token.split(":", 1)
             out.append((provider.strip(), model.strip()))
         else:
+            aliases = ", ".join(sorted(MODEL_ALIASES))
             raise ValueError(
-                f"unknown model '{token}'. Use opus/sonnet/haiku or provider:model-id"
+                f"unknown model '{token}'. Use {aliases}, or provider:model-id"
             )
     if not out:
         raise ValueError("no models specified")

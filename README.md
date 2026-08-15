@@ -87,6 +87,7 @@ python3 -m keep_or_cut.cli --models sonnet,haiku,grok,codex,cursor,gemini --smok
 | `--harness skill` | Force slash-invoke (`claude -p /skillname`). Bare arm gets `--disable-slash-commands`. |
 | `--harness notes` | Always dump markdown as extra system text (old behavior). |
 | `--models opus,sonnet,haiku` | Also: `grok`, `codex`, `cursor`, `gemini`, or `provider:model-id`. |
+| `--provider auto` | Default. Subscription CLIs (`claude`/`codex`/`grok`/`cursor`/`gemini`). Use `anthropic`/`openai`/`xai` for billed APIs. |
 | `--smoke` | First Case × first model. Use this before a 6×3×N burn. |
 
 ## Read the numbers honestly

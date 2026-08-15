@@ -71,9 +71,21 @@ def _parse_verdict(text: str) -> tuple[int, str]:
 def judge_all(runs: list[Run], cases_by_id: dict[str, Case], judge_provider: str, judge_model: str) -> list[Judgment]:
     judgments = []
     for run in runs:
-        case = cases_by_id[run.case_id]
         print(f"[judge] {run.case_id} x {run.profile_id}")
-        judgments.append(judge_run(run, case, judge_provider, judge_model))
+        try:
+            case = cases_by_id[run.case_id]
+            judgments.append(judge_run(run, case, judge_provider, judge_model))
+        except Exception as e:  # record the cell; CLI fail-closes the leaderboard
+            print(f"[judge] FAILED {run.case_id} x {run.profile_id}: {e}")
+            judgments.append(
+                Judgment(
+                    case_id=run.case_id,
+                    profile_id=run.profile_id,
+                    score=0,
+                    reasoning=f"{type(e).__name__}: {e}",
+                    judge_model=judge_model,
+                )
+            )
     return judgments
 
 

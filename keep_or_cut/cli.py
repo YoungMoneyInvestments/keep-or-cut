@@ -20,6 +20,7 @@ except ImportError:  # Elo shipped in a parallel change; class split must run wi
 from keep_or_cut.profiles import HARNESS_MODES, default_profiles, label_for_context_dir, resolve_models
 from keep_or_cut.runner import run_all, runs_to_dicts
 from keep_or_cut.judge import judge_all, judgments_to_dicts
+from keep_or_cut.models import Case, Judgment, Profile
 
 
 def _expand_dirs(paths: list[str], split: str) -> list[tuple]:
@@ -53,6 +54,24 @@ def _expand_dirs(paths: list[str], split: str) -> list[tuple]:
                 (cls.id, cls_path, include, cls.extra_notes, cls.id, cls.kind)
             )
     return bundles
+
+
+def unusable_judge_cells(
+    judgments: list[Judgment],
+    cases: list[Case],
+    profiles: list[Profile],
+) -> list[str]:
+    """Case × Profile labels that are missing or have an unusable score (≤ 0)."""
+    missing: list[str] = []
+    have = {(j.case_id, j.profile_id) for j in judgments}
+    for case in cases:
+        for profile in profiles:
+            if (case.id, profile.id) not in have:
+                missing.append(f"{case.id} × {profile.id}")
+    for judgment in judgments:
+        if judgment.score <= 0:
+            missing.append(f"{judgment.case_id} × {judgment.profile_id}: {judgment.reasoning}")
+    return missing
 
 
 def main() -> None:
@@ -203,6 +222,17 @@ def main() -> None:
     judged_path = out_dir / f"judged_{ts}.json"
     judged_path.write_text(json.dumps(judgments_to_dicts(judgments), indent=2))
     print(f"[cli] wrote {judged_path}")
+
+    failed_judgments = [j for j in judgments if j.score <= 0]
+    missing_judge = unusable_judge_cells(judgments, cases, profiles)
+    if missing_judge:
+        dash = write_dashboard(None, status="incomplete", missing=missing_judge, **dash_kw)
+        print(
+            f"[cli] incomplete matrix: {len(judgments) - len(failed_judgments)}/{expected} "
+            f"judged cells, {len(failed_judgments)} failed. No KEEP/REMOVE leaderboard."
+        )
+        print(f"[cli] wrote {dash}")
+        raise SystemExit(2)
 
     deltas = analyze_deltas(judgments, profiles)
     elo = elo_ratings(judgments) if elo_ratings else None

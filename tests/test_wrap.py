@@ -41,6 +41,7 @@ def test_bare_notes_are_empty_in_every_mode():
 
 def test_resolve_models_aliases():
     assert resolve_models("opus") == [("anthropic", "claude-opus-5")]
+    assert resolve_models("grok") == [("grok", "grok-4.6")]
     assert resolve_models("xai:grok-4") == [("xai", "grok-4")]
 
 

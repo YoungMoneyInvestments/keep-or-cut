@@ -1,14 +1,14 @@
 """Thin per-provider callers. Returns (text, input_tokens, output_tokens).
 
 Supports:
-1. Local CLI harness execution (`claude -p`, `codex exec`, `grok --single`, `gemini -p`)
-   using your active local OAuth/subscription sessions — no API key needed.
+1. Local CLI harness execution (`claude -p`, `codex exec`, `grok --single`,
+   `cursor-agent`, `gemini -p` / `gmi`) using your active local OAuth/subscription
+   sessions — no API key needed.
 2. Claude Code skill invocation via slash commands in `claude -p` (`call_cli_skill_harness`).
 3. Direct API keys (`anthropic`, `openai`, `xai`) if configured.
 4. OmniRoute proxy fallback if explicitly configured.
 
-`cursor-agent` is wired via subscription OAuth (no API key needed). Gemini requires a
-prefer `gmi` (subscription) over raw `gemini -p` (interactive OAuth still incomplete).
+Prefer `gmi` (subscription) over raw `gemini -p` when interactive OAuth is incomplete.
 """
 from __future__ import annotations
 
@@ -124,19 +124,19 @@ def call_grok_cli(model: str, system: str, prompt: str) -> tuple[str, int, int]:
     """Execute via the local `grok` CLI (own OAuth/session, independent of XAI_API_KEY —
     verified live: XAI_API_KEY was credit-exhausted but this path still worked).
 
-    `grok --single` has no real system-role flag, so `system` is concatenated as plain
-    text ahead of the task. It is NOT relabeled "System Instructions:" — the caller
-    (wrap_request) already picked the framing for the active --wrap mode (e.g. fair mode's
-    "optional reference" preamble); slapping our own "System Instructions:" label back on
-    top would silently reproduce the raw-mode wrapping bug from issue #1 for this provider
-    only, regardless of which --wrap mode was requested.
+    Grok Build exposes `--system-prompt` (alias of `--system-prompt-override`). Fair
+    and system wrap modes pass notes there so the Case stays the user message — the
+    same contract as `claude --system-prompt-file`. Concatenating notes into
+    `--single` would silently collapse every wrap mode into user-turn stuffing
+    (issue #1 class) for this provider only.
     """
-    full_prompt = f"{system}\n\n{prompt}" if system else prompt
-    cmd = ["grok", "--single", full_prompt, "--model", model, "--cwd", _NEUTRAL_CWD]
+    cmd = ["grok", "--single", prompt, "--model", model, "--cwd", _NEUTRAL_CWD]
+    if system:
+        cmd.extend(["--system-prompt", system])
     try:
         res = subprocess.run(cmd, capture_output=True, text=True, timeout=180, check=True)
         text = res.stdout.strip()
-        in_tok = len(full_prompt.split()) * 2
+        in_tok = (len(prompt.split()) + len(system.split())) * 2
         out_tok = len(text.split()) * 2
         return text, in_tok, out_tok
     except Exception as e:
@@ -151,7 +151,7 @@ def call_cursor_cli(model: str, system: str, prompt: str) -> tuple[str, int, int
     the prompt.
 
     No system-role flag, so `system` is concatenated as plain text, not relabeled
-    "System Instructions:" — same reasoning as call_grok_cli.
+    "System Instructions:" (the old raw wrap from issue #1).
     """
     full_prompt = f"{system}\n\n{prompt}" if system else prompt
     cmd = [
@@ -189,7 +189,7 @@ def call_codex_cli(model: str, system: str, prompt: str) -> tuple[str, int, int]
     final answer from interleaved hook/MCP log lines that otherwise pollute stdout.
 
     `codex exec` has no system-role flag either, so `system` is concatenated as plain
-    text, not relabeled "System Instructions:" — same reasoning as call_grok_cli.
+    text, not relabeled "System Instructions:" (the old raw wrap from issue #1).
     """
     full_prompt = f"{system}\n\n{prompt}" if system else prompt
     fd, out_path = tempfile.mkstemp(prefix="keep_or_cut-codex-out-", suffix=".txt")

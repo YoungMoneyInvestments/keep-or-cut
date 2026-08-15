@@ -37,3 +37,10 @@ Real Claude Code skill invocation is now supported via `--harness auto` (default
 - `--harness notes` preserves the old fair/system/raw wrap for A/B against the slash path.
 
 See `keep_or_cut/providers.py:call_cli_skill_harness` and `keep_or_cut/runner.py`.
+
+## Update (2026-08-15): Grok has a real system-role flag
+
+`call_grok_cli` previously concatenated notes into `--single` on the claim that
+`grok` had no system-role flag. Current Grok Build exposes `--system-prompt`
+(alias of `--system-prompt-override`). Fair/system wrap now pass notes there so
+the Case stays the user message on Grok the same way they do on `claude -p`.

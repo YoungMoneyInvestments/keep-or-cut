@@ -10,7 +10,41 @@ from keep_or_cut.providers import (
     call_cli_skill_harness,
     call_cursor_cli,
     call_gemini_cli,
+    call_grok_cli,
 )
+
+
+def test_call_grok_cli_uses_system_prompt_flag():
+    mock_result = MagicMock()
+    mock_result.stdout = "  bench answer  "
+    with patch("keep_or_cut.providers.subprocess.run", return_value=mock_result) as mock_run:
+        text, in_tok, out_tok = call_grok_cli("grok-4.6", "optional notes", "do the task")
+
+    assert text == "bench answer"
+    assert in_tok > 0
+    assert out_tok > 0
+
+    mock_run.assert_called_once()
+    cmd, kwargs = mock_run.call_args[0][0], mock_run.call_args[1]
+    assert cmd[0] == "grok"
+    assert "--single" in cmd and cmd[cmd.index("--single") + 1] == "do the task"
+    assert "--system-prompt" in cmd and cmd[cmd.index("--system-prompt") + 1] == "optional notes"
+    assert "--model" in cmd and cmd[cmd.index("--model") + 1] == "grok-4.6"
+    assert "--cwd" in cmd
+    assert "optional notes\n\ndo the task" not in cmd
+    assert kwargs["timeout"] == 180
+    assert kwargs["check"] is True
+
+
+def test_call_grok_cli_bare_omits_system_prompt_flag():
+    mock_result = MagicMock()
+    mock_result.stdout = "ok"
+    with patch("keep_or_cut.providers.subprocess.run", return_value=mock_result) as mock_run:
+        call_grok_cli("grok-4.6", "", "just the task")
+
+    cmd = mock_run.call_args[0][0]
+    assert "--system-prompt" not in cmd
+    assert "--single" in cmd and cmd[cmd.index("--single") + 1] == "just the task"
 
 
 def test_call_cursor_cli_invokes_subprocess_with_ask_mode():

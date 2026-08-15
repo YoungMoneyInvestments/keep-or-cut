@@ -1,0 +1,18 @@
+category: research
+prompt: |
+  Summarize the following paragraph in exactly two sentences, keeping the core claim and the
+  main piece of evidence, dropping everything else:
+
+  "A growing body of research suggests that context length alone does not predict how well a
+  language model performs on a given task; what matters more is whether the provided context is
+  relevant and non-contradictory. In one internal study, models given a shorter but curated
+  context outperformed the same models given a longer, unfiltered context by a wide margin on
+  instruction-following benchmarks, even though the longer context contained strictly more
+  information. Researchers hypothesize that irrelevant or redundant context forces the model to
+  spend more of its attention filtering signal from noise, which can crowd out the reasoning
+  needed for the actual task."
+rubric:
+  - Exactly two sentences, not one and not three
+  - Keeps the core claim (context relevance matters more than length)
+  - Keeps the key evidence (curated shorter context beat longer unfiltered context)
+  - Drops secondary detail (the hypothesis about attention) without losing meaning

@@ -1,0 +1,9 @@
+category: creative
+prompt: |
+  Write a 4-line poem about debugging code at 2am. Every line must end with a word that rhymes
+  with "light".
+rubric:
+  - Exactly 4 lines
+  - Every line-ending word actually rhymes with "light"
+  - On-topic (debugging, 2am, coding) rather than generic
+  - Reads like a poem, not a list of rhyming words stitched together

@@ -1,0 +1,10 @@
+category: coding
+prompt: |
+  A user reports: "My Node.js script hangs forever and never exits, even after the async
+  function I call finishes and logs its result." List the 3 most likely causes, ranked by how
+  common they are in practice, in one line each.
+rubric:
+  - All 3 causes are genuinely plausible reasons a Node process hangs after work finishes
+  - Ranked by real-world frequency, not just listed randomly (e.g. open server/interval before obscure edge cases)
+  - Each explained in one line, not a paragraph
+  - Doesn't pad with generic "check your code" advice that isn't one of the 3 causes

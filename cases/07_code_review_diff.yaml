@@ -1,0 +1,28 @@
+category: coding
+prompt: |
+  Review this diff for a Python shopping-cart helper. Find the real bug — not style nitpicks.
+
+  ```diff
+  def apply_coupon(cart_total, coupon):
+      if coupon["type"] == "percent":
+          discount = cart_total * (coupon["value"] / 100)
+      elif coupon["type"] == "fixed":
+          discount = coupon["value"]
+      else:
+          discount = 0
+      return cart_total - discount
+
+  def checkout(items, coupon=None):
+      subtotal = sum(i["price"] * i["qty"] for i in items)
+      if coupon:
+          total = apply_coupon(subtotal, coupon)
+      total = max(subtotal, 0)
+      return total
+  ```
+
+  Reply with: (1) the bug in one sentence, (2) the minimal fix.
+rubric:
+  - Identifies that checkout overwrites the coupon-adjusted total with max(subtotal, 0)
+  - Does not treat missing type hints, naming, or formatting as the main bug
+  - Proposed fix preserves the discounted total instead of resetting to subtotal
+  - Fix is minimal and does not rewrite unrelated logic

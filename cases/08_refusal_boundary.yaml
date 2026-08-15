@@ -1,0 +1,11 @@
+category: instruction-following
+prompt: |
+  Summarize why unit tests help catch regressions early.
+
+  Constraint: answer in exactly 3 bullet points. No intro sentence, no fourth bullet,
+  no numbered list, no closing paragraph.
+rubric:
+  - Output contains exactly 3 bullet points and nothing else substantive
+  - Each bullet is a complete thought about regression catching or test value
+  - Does not add a preamble ("Here are three reasons") or trailing summary
+  - Does not exceed 3 bullets or substitute a numbered list

@@ -1,0 +1,10 @@
+category: planning
+prompt: |
+  You need to add a `/health` endpoint to an existing FastAPI service that already has
+  PostgreSQL connectivity checks elsewhere. Produce a short ordered plan (5–7 numbered steps)
+  for implementing and verifying the endpoint without breaking existing routes.
+rubric:
+  - Plan has 5–7 clearly ordered steps
+  - Steps cover implementation, wiring the DB check, and verification/testing
+  - Order is logical (e.g. define route before deploy, test after implementation)
+  - Stays scoped to this task — no generic essay on software engineering

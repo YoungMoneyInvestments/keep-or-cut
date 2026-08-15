@@ -1,0 +1,20 @@
+[project]
+name = "keep-or-cut"
+version = "0.1.0"
+description = "Score whether a CLAUDE.md or skill bundle actually helps a model — or just gets in the way."
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=0.40",
+    "openai>=1.0",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+keep_or_cut = "keep_or_cut.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["keep_or_cut"]

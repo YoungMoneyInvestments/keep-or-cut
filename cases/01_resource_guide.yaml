@@ -1,0 +1,20 @@
+category: writing
+prompt: |
+  Turn the following interview transcript excerpt into a short resource guide (headings +
+  bullet points) that a reader could skim in two minutes. Pull out the 3-4 main ideas and give
+  each one a timestamp if the transcript has them.
+
+  Transcript excerpt:
+  "[01:12] And so, one thing about Opus 5 is it's just really intelligent. A lot of the stuff in
+  the system prompt was correcting for behaviors the model should have known but didn't. Now
+  Opus 5 just does it. [02:19] this is something we really do recommend, just try deleting all
+  of these things because the model might not need all those instructions that you needed for
+  past models. [08:03] you should give the model slightly harder tasks than what you think it
+  can do. [10:01] the skill nowadays is less about prompt engineering and more about figuring
+  out how do you give Claude a hard task that seems a little bit too hard, and how do you make
+  it possible for Claude to verify its work along the way."
+rubric:
+  - Correctly extracts the main ideas without inventing ones not in the transcript
+  - Uses the timestamps that are actually present in the excerpt
+  - Skimmable in under two minutes (headings/bullets, not a wall of prose)
+  - Doesn't pad with filler or repeat the same point twice

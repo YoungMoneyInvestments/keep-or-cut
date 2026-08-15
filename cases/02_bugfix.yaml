@@ -1,0 +1,17 @@
+category: coding
+prompt: |
+  This Python function is supposed to return the running total after each purchase, but it's
+  returning the wrong values. Find the bug and fix it. Show the corrected function only.
+
+  def running_totals(purchases):
+      total = 0
+      totals = []
+      for p in purchases:
+          totals.append(total)
+          total += p
+      return totals
+rubric:
+  - Correctly identifies that totals.append(total) happens before total += p
+  - Fixed function actually produces the running total including the current purchase
+  - Doesn't introduce a new bug (e.g. off-by-one, wrong initial value)
+  - Explanation (if any) is short and doesn't restate the whole function line by line

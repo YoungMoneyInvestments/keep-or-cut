@@ -1,0 +1,9 @@
+category: instruction-following
+prompt: |
+  Reply with a JSON array of exactly 5 strings, each a one-word synonym for "fast". No other
+  text before or after the array, no markdown code fences.
+rubric:
+  - Output is valid JSON and nothing else (no code fence, no leading/trailing prose)
+  - Contains exactly 5 elements
+  - Every element is a single word and a real synonym for "fast"
+  - No duplicate words

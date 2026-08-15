@@ -1,0 +1,9 @@
+category: ambiguity
+prompt: |
+  "Make the login page faster."
+rubric:
+  - Either asks one focused clarifying question about what "faster" means (load time, auth latency, UX steps, etc.)
+    OR explicitly states reasonable assumptions before proposing work
+  - Does not jump straight into a large implementation plan with no assumptions stated
+  - Clarifying question or assumptions are specific to login performance, not generic
+  - Response is concise — not a full redesign spec without grounding

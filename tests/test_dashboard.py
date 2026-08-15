@@ -101,6 +101,26 @@ def test_skills_nest_under_category():
     assert "skills (" in page
 
 
+def test_family_only_matrix_still_gets_a_skills_root():
+    """--split skills with every leaf sharing a prefix and no lone singleton skill.
+
+    Regression: parent synthesis used to run in a single pass, so a family row
+    (e.g. "skills/linting") got created but its own missing parent ("skills")
+    never did — every row ended up with a non-empty `.parent` that pointed at
+    nothing in `by_id`, so `roots` (rows with no parent) came back empty and
+    the dashboard rendered zero rows.
+    """
+    deltas = [
+        _delta("claude-opus-5", "skills/linting-audit", -1.4, "REMOVE", "skills"),
+        _delta("claude-opus-5", "skills/linting-debug", -0.8, "PROMPT_BLOAT", "skills"),
+    ]
+    models, roots = build_matrix(deltas)
+    assert [r.id for r in roots] == ["skills"]
+    assert [c.id for c in roots[0].children] == ["skills/linting"]
+    lint = roots[0].children[0]
+    assert {k.id for k in lint.children} == {"skills/linting-audit", "skills/linting-debug"}
+
+
 def test_n_zero_cell_has_no_call():
     deltas = [
         AblationDelta("claude-opus-5", "hooks", 0.0, 0.0, 0.0, "KEEP", kind="hooks", n_paired=0),
@@ -156,5 +176,6 @@ if __name__ == "__main__":
     test_matrix_is_class_rows_by_model_columns()
     test_html_paints_calls_and_hides_elo()
     test_skills_nest_under_category()
+    test_family_only_matrix_still_gets_a_skills_root()
     test_n_zero_cell_has_no_call()
     print("ok")

@@ -225,19 +225,27 @@ def build_matrix(
         if model not in by_id[rid].cells:
             by_id[rid].cells[model] = MatrixCell(expected=True, n_paired=0)
 
-    # Synthesize missing family / skills parents so children can nest.
-    for row in list(by_id.values()):
-        if row.parent and row.parent not in by_id:
-            parent_label = (
-                "skills" if row.parent == "skills" else row.parent.split("/")[-1]
-            )
-            by_id[row.parent] = MatrixRow(
-                row.parent,
-                parent_label,
-                "skills",
-                0 if row.parent == "skills" else 1,
-                "" if row.parent == "skills" else "skills",
-            )
+    # Synthesize missing family / skills parents so children can nest. Repeat until
+    # every ancestor resolves: a synthesized family row (e.g. "skills/example") has
+    # its own parent ("skills"), which can itself still be missing. A single pass
+    # only fixed one level and left orphaned rows with no root, so the dashboard
+    # rendered an empty table for any --split skills matrix with a shared prefix.
+    added = True
+    while added:
+        added = False
+        for row in list(by_id.values()):
+            if row.parent and row.parent not in by_id:
+                parent_label = (
+                    "skills" if row.parent == "skills" else row.parent.split("/")[-1]
+                )
+                by_id[row.parent] = MatrixRow(
+                    row.parent,
+                    parent_label,
+                    "skills",
+                    0 if row.parent == "skills" else 1,
+                    "" if row.parent == "skills" else "skills",
+                )
+                added = True
 
     for row in by_id.values():
         for m in model_ids:

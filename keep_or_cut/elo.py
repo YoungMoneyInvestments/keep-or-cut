@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import random
 from collections import defaultdict
+from dataclasses import replace
 
 from keep_or_cut.ablation import analyze_deltas
 from keep_or_cut.models import Judgment, Profile
@@ -97,8 +98,12 @@ def bootstrap_delta_ci(
     for _ in range(n_boot):
         sampled_cases = [rng.choice(case_ids) for _ in case_ids]
         boot_judgments: list[Judgment] = []
-        for case_id in sampled_cases:
-            boot_judgments.extend(j for j in valid_judgments if j.case_id == case_id)
+        for draw, case_id in enumerate(sampled_cases):
+            boot_judgments.extend(
+                replace(j, case_id=f"{draw}:{case_id}")
+                for j in valid_judgments
+                if j.case_id == case_id
+            )
 
         for delta in analyze_deltas(boot_judgments, profiles):
             samples_by_key[(delta.model, delta.skill_name)].append(delta.delta)

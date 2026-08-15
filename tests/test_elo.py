@@ -53,3 +53,23 @@ def test_bootstrap_delta_ci_shape():
     assert row["delta"] == -2.0
     assert "ci_low" in row and "ci_high" in row
     assert row["ci_low"] <= row["delta"] <= row["ci_high"]
+
+
+def test_bootstrap_delta_ci_preserves_repeated_case_draws():
+    profiles = [
+        Profile("bare", "cli", "m", None),
+        Profile("skill", "cli", "m", "/tmp/example"),
+    ]
+    judgments = [
+        Judgment("case1", "bare", 1, "", "judge"),
+        Judgment("case1", "skill", 1, "", "judge"),
+        Judgment("case2", "bare", 1, "", "judge"),
+        Judgment("case2", "skill", 4, "", "judge"),
+        Judgment("case3", "bare", 1, "", "judge"),
+        Judgment("case3", "skill", 10, "", "judge"),
+    ]
+
+    [row] = bootstrap_delta_ci(judgments, profiles, n_boot=1, seed=0)
+
+    # seed=0 draws case2, case2, case1: (3 + 3 + 0) / 3 = 2.
+    assert row["ci_low"] == row["ci_high"] == 2.0

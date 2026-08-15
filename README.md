@@ -4,7 +4,7 @@ Find which **skills** and **hooks** still help — and which newer models have o
 
 Works on Claude Code, Codex, Grok, or any LLM tool with a skills / hooks / memory directory. It splits that pile, scores each class **alone** against bare, and prints KEEP / PROMPT_BLOAT / REMOVE.
 
-**No API key for Claude.** Profiles and the judge use your local `claude` CLI (`claude /login`). Optional: `XAI_API_KEY` for Grok.
+**No API key for Claude.** Profiles and the judge use your local `claude` CLI (`claude /login`). Grok defaults to the local `grok` CLI the same way; set `XAI_API_KEY` only with `--provider xai`.
 
 ## Run it
 

@@ -23,6 +23,24 @@ from keep_or_cut.judge import judge_all, judgments_to_dicts
 from keep_or_cut.models import Case, Judgment, Profile
 
 
+from keep_or_cut.context import build_system_prompt
+
+# Every model tested against a real ~/.claude eventually needs a hard ceiling: no CLI
+# harness call is worth attempting once the bundle alone can't fit in the smallest
+# context window in play (haiku's is far below opus/sonnet's 1M). ~2.5 chars/token is
+# what the "Prompt is too long" error itself implied on this corpus (3.15M chars ->
+# ~1.26M tokens) -- conservative enough that a skip means "actually too big," not noise.
+_MAX_BUNDLE_TOKENS = 150_000
+_CHARS_PER_TOKEN = 2.5
+
+
+def _bundle_chars(path: str, include: tuple[str, ...] | None, extra_notes: str) -> int:
+    try:
+        return len(build_system_prompt(path, include=include, extra_notes=extra_notes))
+    except FileNotFoundError:
+        return 0
+
+
 def _expand_dirs(paths: list[str], split: str) -> list[tuple]:
     """Turn --context-dir paths into profile bundles. Auto-splits a Claude home."""
     bundles: list[tuple] = []
@@ -39,7 +57,33 @@ def _expand_dirs(paths: list[str], split: str) -> list[tuple]:
             + ", ".join(c.id for c in classes)
             + " (plus +all for the whole pile). --split off to disable."
         )
-        bundles.append((label_for_context_dir(path) + "+all", path))
+        all_files: list[str] = []
+        all_extra: list[str] = []
+        for cls in classes:
+            all_files.extend(cls.files)
+            if cls.extra_notes:
+                all_extra.append(cls.extra_notes)
+        all_include = tuple(all_files) or None
+        all_extra_notes = "\n".join(all_extra)
+        all_chars = _bundle_chars(path, all_include, all_extra_notes)
+        if all_chars > _MAX_BUNDLE_TOKENS * _CHARS_PER_TOKEN:
+            print(
+                f"[cli] skipping +all for {path}: ~{int(all_chars / _CHARS_PER_TOKEN):,} "
+                f"tokens > {_MAX_BUNDLE_TOKENS:,} safe ceiling. That alone is a finding: "
+                "the whole pile does not fit in any tested model's context. "
+                "Scored per-class/per-family below instead."
+            )
+        else:
+            bundles.append(
+                (
+                    label_for_context_dir(path) + "+all",
+                    path,
+                    all_include,
+                    all_extra_notes,
+                    "+all",
+                    "all",
+                )
+            )
         for cls in classes:
             include = tuple(cls.files)
             if not include and not cls.extra_notes:
@@ -50,6 +94,14 @@ def _expand_dirs(paths: list[str], split: str) -> list[tuple]:
                 if (skill_dir / "SKILL.md").is_file():
                     cls_path = str(skill_dir)
                     include = None
+            cls_chars = _bundle_chars(cls_path, include, cls.extra_notes)
+            if cls_chars > _MAX_BUNDLE_TOKENS * _CHARS_PER_TOKEN:
+                print(
+                    f"[cli] skipping {cls.id} for {path}: ~{int(cls_chars / _CHARS_PER_TOKEN):,} "
+                    f"tokens > {_MAX_BUNDLE_TOKENS:,} safe ceiling. Split narrower "
+                    "(--split families or --split skills) to score it."
+                )
+                continue
             bundles.append(
                 (cls.id, cls_path, include, cls.extra_notes, cls.id, cls.kind)
             )

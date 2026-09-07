@@ -1,0 +1,2 @@
+[console_scripts]
+keep_or_cut = keep_or_cut.cli:main

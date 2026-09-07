@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: keep-or-cut
+Version: 0.1.0
+Summary: Score whether a CLAUDE.md or skill bundle actually helps a model — or just gets in the way.
+Requires-Python: >=3.10
+License-File: LICENSE
+Requires-Dist: anthropic>=0.40
+Requires-Dist: openai>=1.0
+Requires-Dist: pyyaml>=6.0
+Dynamic: license-file

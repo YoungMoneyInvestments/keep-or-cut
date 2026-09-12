@@ -22,6 +22,22 @@ import tempfile
 # per-run mkdtemp cost) since it's never written to.
 _NEUTRAL_CWD = tempfile.mkdtemp(prefix="keep_or_cut-cwd-")
 
+_POLICY_SKIP_MARKERS = (
+    "refusing a counting/enumeration",
+    "workspace trust required",
+)
+
+
+class PolicySkipError(RuntimeError):
+    """Provider refused this Case. Drop the model; do not fail-close other models."""
+
+
+def _raise_if_policy_skip(stderr: str, prefix: str) -> None:
+    low = (stderr or "").lower()
+    for marker in _POLICY_SKIP_MARKERS:
+        if marker in low:
+            raise PolicySkipError(f"{prefix}: {stderr.strip()[:300]}")
+
 
 def _cli_model_flag(model: str) -> list[str]:
     if "sonnet" in model:
@@ -161,6 +177,7 @@ def call_cursor_cli(model: str, system: str, prompt: str) -> tuple[str, int, int
         "ask",
         "--output-format",
         "text",
+        "--trust",
         "--model",
         model,
         "--workspace",
@@ -175,6 +192,10 @@ def call_cursor_cli(model: str, system: str, prompt: str) -> tuple[str, int, int
         in_tok = len(full_prompt.split()) * 2
         out_tok = len(text.split()) * 2
         return text, in_tok, out_tok
+    except subprocess.CalledProcessError as e:
+        stderr = (e.stderr or "") + (e.stdout or "")
+        _raise_if_policy_skip(stderr, "cursor")
+        raise RuntimeError(f"cursor CLI execution failed: {e}") from e
     except Exception as e:
         raise RuntimeError(f"cursor CLI execution failed: {e}") from e
 
@@ -252,6 +273,7 @@ def call_gemini_cli(model: str, system: str, prompt: str) -> tuple[str, int, int
         ) from e
     except subprocess.CalledProcessError as e:
         stderr = (e.stderr or "") + (e.stdout or "")
+        _raise_if_policy_skip(stderr, "gmi" if use_gmi else "gemini")
         if use_gmi:
             raise RuntimeError(f"gmi execution failed: {stderr[:300] or e}") from e
         if any(

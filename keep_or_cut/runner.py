@@ -6,7 +6,9 @@ from dataclasses import asdict
 
 from keep_or_cut.context import build_system_prompt, wrap_request
 from keep_or_cut.models import Case, Profile, Run
-from keep_or_cut.providers import CALLERS, call_cli_harness, call_cli_skill_harness
+from keep_or_cut.providers import CALLERS, PolicySkipError, call_cli_harness, call_cli_skill_harness
+
+POLICY_SKIP_PREFIX = "POLICY_SKIP:"
 
 
 def _uses_cli_skill_harness(profile: Profile) -> bool:
@@ -69,21 +71,52 @@ def run_one(
     )
 
 
+def _format_eta(seconds: float) -> str:
+    if seconds < 1:
+        return "0s"
+    if seconds < 60:
+        return f"{int(seconds)}s"
+    minutes = int(seconds // 60)
+    if minutes < 60:
+        return f"{minutes}m"
+    hours, minutes = divmod(minutes, 60)
+    return f"{hours}h{minutes:02d}m"
+
+
 def run_all(
     cases: list[Case],
     profiles: list[Profile],
     wrap: str = "fair",
     *,
     disable_slash_baseline: bool | None = None,
+    existing: list[Run] | None = None,
 ) -> list[Run]:
     """Sequential on purpose — a benchmark isn't a load test, and sequential runs are easy to
     read logs for. Parallelize later if the case/profile matrix gets big enough to matter."""
     if disable_slash_baseline is None:
         disable_slash_baseline = any(p.skill_name for p in profiles)
+    prior = {
+        (r.case_id, r.profile_id): r
+        for r in (existing or [])
+        if r.ok
+    }
+    total = len(cases) * len(profiles)
+    done = 0
+    started = time.monotonic()
     runs = []
     for case in cases:
         for profile in profiles:
-            print(f"[run] {case.id} x {profile.id}")
+            done += 1
+            elapsed = time.monotonic() - started
+            remaining = total - done
+            eta = (elapsed / done) * remaining if done else 0
+            prefix = f"[run] {done}/{total}"
+            cached = prior.get((case.id, profile.id))
+            if cached is not None:
+                print(f"{prefix} resume {case.id} x {profile.id}")
+                runs.append(cached)
+                continue
+            print(f"{prefix} {case.id} x {profile.id}  elapsed {_format_eta(elapsed)}  eta {_format_eta(eta)}")
             try:
                 runs.append(
                     run_one(
@@ -91,6 +124,19 @@ def run_all(
                         profile,
                         wrap=wrap,
                         disable_slash_baseline=disable_slash_baseline,
+                    )
+                )
+            except PolicySkipError as e:
+                print(f"[run] SKIP {case.id} x {profile.id}: {e}")
+                runs.append(
+                    Run(
+                        case_id=case.id,
+                        profile_id=profile.id,
+                        output="",
+                        latency_s=0.0,
+                        input_tokens=0,
+                        output_tokens=0,
+                        error=f"{POLICY_SKIP_PREFIX} {e}",
                     )
                 )
             except Exception as e:  # record the cell; CLI fail-closes the leaderboard
@@ -111,3 +157,12 @@ def run_all(
 
 def runs_to_dicts(runs: list[Run]) -> list[dict]:
     return [asdict(r) for r in runs]
+
+
+def runs_from_dicts(rows: list[dict]) -> list[Run]:
+    fields = set(Run.__dataclass_fields__)
+    return [Run(**{k: v for k, v in row.items() if k in fields}) for row in rows]
+
+
+def is_policy_skip(error: str) -> bool:
+    return error.startswith(POLICY_SKIP_PREFIX) or "refusing a counting/enumeration" in error.lower()

@@ -1,26 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="keep-or-cut: which of your skill classes are bloat?">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="It already knows. Skills, hooks, CLAUDE.md, and AGENTS.md got baked into the session prompt.">
   <rect width="1280" height="640" fill="#0b0d10"/>
-  <text x="64" y="80" fill="#e8a54b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" letter-spacing="4">CONTEXT-BENCH</text>
-  <text x="64" y="168" fill="#f4f0e6" font-family="ui-sans-serif, system-ui, sans-serif" font-size="52" font-weight="700">Which of your skills</text>
-  <text x="64" y="232" fill="#f4f0e6" font-family="ui-sans-serif, system-ui, sans-serif" font-size="52" font-weight="700">are the model outgrowing?</text>
-  <text x="64" y="300" fill="#9aa3ad" font-family="ui-sans-serif, system-ui, sans-serif" font-size="26">Split ~/.claude into CLAUDE.md, skills, hooks, agents. Score each class alone.</text>
-  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="700">
-    <rect x="64" y="350" width="200" height="52" rx="8" fill="#15181e" stroke="#2a3038"/>
-    <text x="164" y="384" text-anchor="middle" fill="#f4f0e6">CLAUDE.md</text>
-    <rect x="280" y="350" width="160" height="52" rx="8" fill="#15181e" stroke="#2a3038"/>
-    <text x="360" y="384" text-anchor="middle" fill="#f4f0e6">skills</text>
-    <rect x="456" y="350" width="160" height="52" rx="8" fill="#15181e" stroke="#2a3038"/>
-    <text x="536" y="384" text-anchor="middle" fill="#f4f0e6">hooks</text>
-    <rect x="632" y="350" width="160" height="52" rx="8" fill="#15181e" stroke="#2a3038"/>
-    <text x="712" y="384" text-anchor="middle" fill="#f4f0e6">agents</text>
+  <rect x="0" y="0" width="620" height="640" fill="#15181e"/>
+  <rect x="616" y="0" width="8" height="640" fill="#e8edf5"/>
+  <text x="48" y="72" fill="#e8a54b" font-family="ui-sans-serif, Helvetica, Arial, sans-serif" font-size="22" font-weight="700">keep-or-cut</text>
+  <text x="48" y="160" fill="#cfd6e2" font-family="Georgia, serif" font-size="28">what you keep adding</text>
+  <g font-family="ui-sans-serif, Helvetica, Arial, sans-serif" font-size="22" font-weight="700">
+    <rect x="48" y="196" width="200" height="48" rx="8" fill="#12151a" stroke="#2a3038"/>
+    <text x="148" y="228" text-anchor="middle" fill="#f4f0e6">CLAUDE.md</text>
+    <rect x="48" y="256" width="200" height="48" rx="8" fill="#12151a" stroke="#2a3038"/>
+    <text x="148" y="288" text-anchor="middle" fill="#f4f0e6">AGENTS.md</text>
+    <rect x="48" y="316" width="160" height="48" rx="8" fill="#12151a" stroke="#2a3038"/>
+    <text x="128" y="348" text-anchor="middle" fill="#f4f0e6">skills</text>
+    <rect x="48" y="376" width="160" height="48" rx="8" fill="#12151a" stroke="#2a3038"/>
+    <text x="128" y="408" text-anchor="middle" fill="#f4f0e6">hooks</text>
+    <rect x="48" y="436" width="200" height="48" rx="8" fill="#12151a" stroke="#2a3038"/>
+    <text x="148" y="468" text-anchor="middle" fill="#f4f0e6">commands</text>
   </g>
-  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="700">
-    <rect x="64" y="430" width="140" height="48" rx="8" fill="#102018" stroke="#2e5a40"/>
-    <text x="134" y="462" text-anchor="middle" fill="#7dcea0">KEEP</text>
-    <rect x="220" y="430" width="220" height="48" rx="8" fill="#1c160c" stroke="#6a4a1e"/>
-    <text x="330" y="462" text-anchor="middle" fill="#e8a54b">PROMPT_BLOAT</text>
-    <rect x="456" y="430" width="160" height="48" rx="8" fill="#1c1010" stroke="#6a2a28"/>
-    <text x="536" y="462" text-anchor="middle" fill="#d94b3d">REMOVE</text>
+  <text x="680" y="200" fill="#f4f0e6" font-family="Georgia, serif" font-size="64" font-weight="700">It already</text>
+  <text x="680" y="272" fill="#f4f0e6" font-family="Georgia, serif" font-size="64" font-weight="700">knows.</text>
+  <text x="680" y="340" fill="#9aa3b2" font-family="ui-sans-serif, Helvetica, Arial, sans-serif" font-size="22">Baked into the session prompt.</text>
+  <text x="680" y="372" fill="#9aa3b2" font-family="ui-sans-serif, Helvetica, Arial, sans-serif" font-size="22">Repeating it is bloat.</text>
+  <g font-family="ui-sans-serif, Helvetica, Arial, sans-serif" font-size="20" font-weight="700">
+    <rect x="680" y="430" width="140" height="48" rx="8" fill="#102018" stroke="#2e5a40"/>
+    <text x="750" y="462" text-anchor="middle" fill="#7dcea0">KEEP</text>
+    <rect x="836" y="430" width="140" height="48" rx="8" fill="#1c1010" stroke="#6a2a28"/>
+    <text x="906" y="462" text-anchor="middle" fill="#d94b3d">CUT</text>
   </g>
-  <text x="64" y="560" fill="#6b7380" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18">github.com/YoungMoneyInvestments/keep-or-cut</text>
 </svg>

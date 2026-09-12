@@ -1,5 +1,9 @@
 # keep-or-cut
 
+<p align="center">
+  <img src="docs/assets/og.jpg" alt="It already knows. Skills, hooks, CLAUDE.md, and AGENTS.md got baked into the session prompt. Repeating them is bloat. KEEP or CUT." width="100%" />
+</p>
+
 Newer models bake the skills, hooks, commands, `CLAUDE.md`, and `AGENTS.md` you used to add yourself into the session prompt. Repeating them bloats the context window. It also restates something the model already knows, usually worse than the native wording.
 
 This scores that pile on Claude Code, Codex, Grok, or any LLM tool with a skills / hooks / memory directory. Each class is scored **alone** against bare. You get KEEP / PROMPT_BLOAT / REMOVE.

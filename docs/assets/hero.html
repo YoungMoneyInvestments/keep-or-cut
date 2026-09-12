@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>keep-or-cut hero</title>
+  <style>
+    html, body { margin: 0; background: #07080a; }
+    .frame {
+      width: 1280px;
+      height: 640px;
+      position: relative;
+      overflow: hidden;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+    .frame img.bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 42% 50%;
+    }
+    .left-cap {
+      position: absolute;
+      left: 36px;
+      bottom: 28px;
+      color: #f4f0e6;
+      font-size: 15px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.85);
+      font-weight: 600;
+    }
+    .pane {
+      position: absolute;
+      top: 78px;
+      right: 72px;
+      width: 520px;
+      height: 470px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #12151a;
+    }
+    h1 {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      font-size: 72px;
+      line-height: 0.92;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .sub {
+      margin: 22px 0 0;
+      font-size: 22px;
+      line-height: 1.35;
+      color: #2a3038;
+      max-width: 28ch;
+      font-weight: 500;
+    }
+    .calls {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .call {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 10px 18px;
+      border-radius: 8px;
+    }
+    .keep { background: #102018; color: #7dcea0; }
+    .cut { background: #1c1010; color: #d94b3d; }
+    .sig {
+      margin-top: 36px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #8a5a16;
+      letter-spacing: 0.02em;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame" id="hero">
+    <img class="bg" src="hero-bg.jpg" alt="" />
+    <div class="left-cap">what you keep adding</div>
+    <div class="pane">
+      <h1>It already<br>knows.</h1>
+      <p class="sub">Skills, hooks, CLAUDE.md, and AGENTS.md got baked into the session prompt. Repeating them is bloat.</p>
+      <div class="calls">
+        <span class="call keep">KEEP</span>
+        <span class="call cut">CUT</span>
+      </div>
+      <div class="sig">keep-or-cut</div>
+    </div>
+  </div>
+</body>
+</html>

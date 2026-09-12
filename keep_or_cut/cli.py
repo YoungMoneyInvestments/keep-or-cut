@@ -215,7 +215,7 @@ def unusable_judge_cells(
 def main() -> None:
     p = argparse.ArgumentParser(
         prog="keep-or-cut",
-        description="Score whether a context bundle helps a model, or just gets in the way.",
+        description="Score which skills, hooks, CLAUDE.md, and AGENTS.md still help after newer models baked that advice into the session prompt.",
         epilog=_EPILOG,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

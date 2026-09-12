@@ -1,7 +1,7 @@
 [project]
 name = "keep-or-cut"
 version = "0.1.0"
-description = "Score whether a CLAUDE.md or skill bundle actually helps a model — or just gets in the way."
+description = "Score which skills, hooks, CLAUDE.md, and AGENTS.md still help after newer models baked that advice into the session prompt."
 requires-python = ">=3.10"
 dependencies = [
     "anthropic>=0.40",

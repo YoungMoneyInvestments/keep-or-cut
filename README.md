@@ -1,8 +1,8 @@
 # keep-or-cut
 
-Find which **skills** and **hooks** still help — and which newer models have outgrown.
+Newer models bake the skills, hooks, commands, `CLAUDE.md`, and `AGENTS.md` you used to add yourself into the session prompt. Repeating them bloats the context window. It also restates something the model already knows, usually worse than the native wording.
 
-Works on Claude Code, Codex, Grok, or any LLM tool with a skills / hooks / memory directory. It splits that pile, scores each class **alone** against bare, and prints KEEP / PROMPT_BLOAT / REMOVE.
+This scores that pile on Claude Code, Codex, Grok, or any LLM tool with a skills / hooks / memory directory. Each class is scored **alone** against bare. You get KEEP / PROMPT_BLOAT / REMOVE.
 
 **No API key for Claude.** Profiles and the judge use your local `claude` CLI (`claude /login`). Grok defaults to the local `grok` CLI the same way; set `XAI_API_KEY` only with `--provider xai`.
 
@@ -127,7 +127,7 @@ rubric:
 
 ## Why
 
-Anthropic deleted ~80% of Claude Code's own system prompt when Opus 5 shipped. The model got better. Boris Cherny's follow-up: do the same thing to *your* stack every six months, then add back only what you watch fail. [Nate Herk's video](https://youtu.be/XNQBCRcwXV4) is what made that advice circulate.
+Anthropic deleted ~80% of Claude Code's own system prompt when Opus 5 shipped. The model got better. The same thing happens to *your* stack: skills, slash commands, hooks, `CLAUDE.md`, and Codex `AGENTS.md` that used to be load-bearing get absorbed into the session prompt. Keep repeating them and you pay twice, wasted tokens and a worse copy of advice it already has. Boris Cherny's follow-up: do this every six months, then add back only what you watch fail. [Nate Herk's video](https://youtu.be/XNQBCRcwXV4) is what made that advice circulate.
 
 A whole-home REMOVE is not actionable. "hooks are fading on Opus, skills still pay on Haiku" is.
 

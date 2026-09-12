@@ -59,10 +59,10 @@ roll up into a Leaderboard.
 _Avoid_: Score (Score is a field on a Judgment, not the concept itself)
 
 **Class**:
-A kind of context inside a Claude home, scored *alone* against bare: `claude.md`, `skills`,
+A kind of context inside a Claude/Codex/Grok home, scored *alone* against bare: `claude.md`, `agents.md`, `skills`,
 `hooks`, `agents`. `--split families` further groups skills by shared name prefix;
 `--split skills` is one class per skill directory. The class matrix is how you see which
-pile newer models are outgrowing.
+pile newer models are outgrowing. `+all` is the union of those classes, not a recursive dump of the home.
 _Avoid_: category (that's a Case field), bundle (a Class is a *slice* of a bundle)
 
 **Leaderboard**:

@@ -11,6 +11,10 @@ dependencies = [
 
 [project.scripts]
 keep_or_cut = "keep_or_cut.cli:main"
+keep-or-cut = "keep_or_cut.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
 
 [build-system]
 requires = ["setuptools>=61"]
@@ -18,3 +22,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["keep_or_cut"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["results", ".venv", ".git"]

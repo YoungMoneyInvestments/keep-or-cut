@@ -11,7 +11,7 @@ from pathlib import Path
 from keep_or_cut.classes import skill_family
 from keep_or_cut.models import AblationDelta, Profile
 
-KIND_ORDER = ("claude.md", "skills", "hooks", "agents")
+KIND_ORDER = ("claude.md", "agents.md", "skills", "hooks", "agents")
 _KIND_RANK = {k: i for i, k in enumerate(KIND_ORDER)}
 
 _HIDE_MD_SECTIONS = {
@@ -127,6 +127,8 @@ def _row_spec(delta: AblationDelta, skill_leaves: list[str]) -> tuple[str, str, 
         return (name, name, kind, 0, "")
     if kind == "claude.md":
         return ("claude.md", "CLAUDE.md", kind, 0, "")
+    if kind == "agents.md":
+        return ("agents.md", "AGENTS.md", kind, 0, "")
     if kind in ("hooks", "agents"):
         return (kind, kind, kind, 0, "")
     if kind == "skills":
@@ -209,7 +211,7 @@ def build_matrix(
 
     for model, rid in expected:
         if rid not in by_id:
-            label = "CLAUDE.md" if rid == "claude.md" else rid.split("/")[-1]
+            label = "CLAUDE.md" if rid == "claude.md" else ("AGENTS.md" if rid == "agents.md" else rid.split("/")[-1])
             kind = rid if rid in _KIND_RANK else (
                 "skills" if rid.startswith("skills") else rid
             )
@@ -344,6 +346,16 @@ def _cell_class(text: str) -> str:
 
 
 def _banner_for(status: str, missing: list[str] | None) -> str:
+    if status == "partial":
+        listed = ""
+        if missing:
+            items = "".join(f"<li><code>{html.escape(m)}</code></li>" for m in missing[:40])
+            listed = f"<ul class='missing'>{items}</ul>"
+        return (
+            "<div class='banner info' role='status'>"
+            "<strong>Some models dropped — KEEP / PROMPT_BLOAT / REMOVE below ignore them.</strong>"
+            f"{listed}</div>"
+        )
     if status == "incomplete":
         listed = ""
         if missing:
@@ -366,7 +378,7 @@ def _banner_for(status: str, missing: list[str] | None) -> str:
         return (
             "<div class='banner'>"
             "No results yet. "
-            "<code>python3 -m keep_or_cut.cli --context-dir ~/.claude</code>"
+            "<code>keep-or-cut --context-dir ~/.claude</code>"
             "</div>"
         )
     return ""
@@ -407,6 +419,11 @@ header { padding: 28px 28px 12px; display:grid; gap:10px; }
   border-radius: 10px;
 }
 .banner ul { margin: 8px 0 0; padding-left: 18px; }
+.banner.info {
+  background: color-mix(in srgb, var(--gold) 18%, var(--panel));
+  border-color: color-mix(in srgb, var(--gold) 45%, var(--line));
+  color: var(--ink);
+}
 main { padding: 16px 28px 40px; }
 .matrix { border:1px solid var(--line); border-radius: 12px; overflow:auto; background: var(--panel); }
 table { width:100%; border-collapse: collapse; min-width: 560px; }
@@ -625,7 +642,7 @@ def render_html(
     else:
         parts.append(
             "<p>No class × model cells yet. "
-            "<code>python3 -m keep_or_cut.cli --context-dir ~/.claude</code></p>"
+            "<code>keep-or-cut --context-dir ~/.claude</code></p>"
         )
     parts.extend(
         [

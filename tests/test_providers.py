@@ -47,6 +47,32 @@ def test_call_grok_cli_bare_omits_system_prompt_flag():
     assert "--single" in cmd and cmd[cmd.index("--single") + 1] == "just the task"
 
 
+def test_call_cursor_cli_passes_trust_flag():
+    mock_result = MagicMock()
+    mock_result.stdout = "ok"
+    with patch("keep_or_cut.providers.subprocess.run", return_value=mock_result) as mock_run:
+        call_cursor_cli("auto", "", "just the task")
+    cmd = mock_run.call_args[0][0]
+    assert "--trust" in cmd
+
+
+def test_call_gemini_cli_policy_refusal_is_skip():
+    import subprocess
+
+    from keep_or_cut.providers import PolicySkipError
+
+    err = subprocess.CalledProcessError(1, ["gmi"], output="", stderr="gmi: refusing a counting/enumeration question")
+    with (
+        patch("shutil.which", return_value="/usr/local/bin/gmi"),
+        patch("keep_or_cut.providers.subprocess.run", side_effect=err),
+    ):
+        try:
+            call_gemini_cli("gemini-3.6-flash-high", "", "count the files")
+            assert False, "expected PolicySkipError"
+        except PolicySkipError as exc:
+            assert "counting/enumeration" in str(exc).lower()
+
+
 def test_call_cursor_cli_invokes_subprocess_with_ask_mode():
     mock_result = MagicMock()
     mock_result.stdout = "  bench answer  "

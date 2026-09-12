@@ -13,8 +13,7 @@ Before committing, inspect both the diff and generated artifacts. Results belong
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e .
-python -m pip install pytest
+python -m pip install -e ".[dev]"
 python -m pytest -q
 ```
 
@@ -29,10 +28,12 @@ python -m keep_or_cut.cli --smoke
 Changes to scoring, profiles, or providers must preserve these invariants:
 
 - Compare bare and treatment arms on the same cases.
-- Fail closed when a Case × Profile cell is missing.
+- Fail closed when a Case × Profile cell is missing, except provider policy skips, which drop that model unless `--strict-matrix` is set.
 - Keep provider and model identity exact in commands and output.
 - Isolate the bare arm from ambient skills, hooks, and memory.
 - Inject each treatment once.
+- `+all` is the union of discovered classes, never plugins/jobs/cache.
+- The skills class dumps `SKILL.md` only.
 
 Add or update a focused test whenever one of these paths changes.
 
